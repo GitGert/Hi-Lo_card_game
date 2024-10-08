@@ -1,0 +1,9 @@
+Card generation :DONE
+
+TODO:
+BE:
+* shuffle the cards
+* implement pullCard feature (returns cards and removes it from deck)
+* compare two cards and give response
+
+
