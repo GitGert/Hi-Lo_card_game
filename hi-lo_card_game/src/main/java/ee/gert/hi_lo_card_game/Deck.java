@@ -28,17 +28,18 @@ public class Deck {
         Collections.shuffle(this.cards);
     }
 
-    public Card takeTopCard(){
-        if (cards.isEmpty()) {
-            return null; // or throw an exception, depending on your requirements
-        }
-        Card topCard = cards.get(0);
+    public Card drawTopCard(){
+        Card topCard = peekAtTopCard();
         cards.remove(0);
-        return  topCard;
+        return topCard;
     }
 
-
-
+    public Card peekAtTopCard(){
+        if (cards.isEmpty()) {
+            return null;
+        }
+        return cards.get(0);
+    }
 
     @Override
     public String toString(){

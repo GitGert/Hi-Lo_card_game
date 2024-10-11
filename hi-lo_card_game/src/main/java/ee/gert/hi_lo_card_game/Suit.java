@@ -6,3 +6,4 @@ public enum Suit {
     HEARTS,
     SPADES
 }
+

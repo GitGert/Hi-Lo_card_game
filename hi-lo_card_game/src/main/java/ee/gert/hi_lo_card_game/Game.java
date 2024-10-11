@@ -7,13 +7,28 @@ public class Game {
     int duration;
     int playerHealth;
     Deck deck;
+    Round round;
+    boolean isGameOver= false;
 
     Game(){
         this.date = new Date();
         this.duration = 0;
         this.playerHealth = 3;
-        this.deck = new Deck();
+        takeNewDeckIntoPlay();
+        startNewRound();
     }
+
+    public void startNewRound(){
+        //TODO: currently the deal card drawing will also destroy the card which is bad since we will need that "dealer card " to be the next "player card"
+        round = new Round(deck, deck.drawTopCard());
+    }
+
+    public void takeNewDeckIntoPlay(){
+        deck = new Deck();
+        deck.shuffleDeck();
+    }
+
+
 
 
     //this got a bit crazy right now. because round and Game is not the same thing.

@@ -18,7 +18,10 @@ public class CardGameEndpointController {
     //this is the start game that will start all the things.
     @GetMapping("/start-round")
     public String startRound(){
-        game = new Game();
+        if (game.isGameOver){
+            game = new Game();
+        }
+        game.startNewRound();
 
         return "";
     }
