@@ -1,6 +1,7 @@
 package ee.gert.hi_lo_card_game;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -14,9 +15,7 @@ public class Deck {
     }
 
     public void generateDeck(){
-
         Pattern pattern = Pattern.compile("\\d+");
-
         for( String rank : ranks){
             for (Suit suit : suits){
                 int value = (pattern.matcher(rank).find() ?  Integer.parseInt(rank) : 10);
@@ -24,6 +23,22 @@ public class Deck {
             }
         }
     }
+
+    public void shuffleDeck(){
+        Collections.shuffle(this.cards);
+    }
+
+    public Card takeTopCard(){
+        if (cards.isEmpty()) {
+            return null; // or throw an exception, depending on your requirements
+        }
+        Card topCard = cards.get(0);
+        cards.remove(0);
+        return  topCard;
+    }
+
+
+
 
     @Override
     public String toString(){

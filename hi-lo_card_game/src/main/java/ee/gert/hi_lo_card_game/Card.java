@@ -16,5 +16,4 @@ public class Card {
     public String toString(){
         return rank  + " of " + suit.toString().toLowerCase()  + " is of value " + value;
     }
-
 }
