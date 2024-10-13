@@ -15,7 +15,6 @@ public class Game {
         this.duration = 0;
         this.playerHealth = 3;
         takeNewDeckIntoPlay();
-        startNewRound();
     }
 
     public void startNewRound(){
@@ -27,7 +26,6 @@ public class Game {
         deck = new Deck();
         deck.shuffleDeck();
     }
-
 
 
 

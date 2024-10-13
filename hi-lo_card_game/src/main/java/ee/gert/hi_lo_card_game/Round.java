@@ -1,5 +1,11 @@
 package ee.gert.hi_lo_card_game;
 
+
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+//@Setter
 public class Round {
     int secondsElapsed; // if this is 0 we take no more requests.
     Deck deck;

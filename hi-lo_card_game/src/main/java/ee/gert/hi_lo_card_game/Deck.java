@@ -1,10 +1,14 @@
 package ee.gert.hi_lo_card_game;
 
+import lombok.Getter;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
+@Getter
 public class Deck {
     private List<Card> cards = new ArrayList<>();
     private static final String[] ranks = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A" };
@@ -22,6 +26,10 @@ public class Deck {
                  cards.add( new Card(suit, rank, value));
             }
         }
+    }
+
+    public int getDeckCardCount(){
+        return cards.size();
     }
 
     public void shuffleDeck(){

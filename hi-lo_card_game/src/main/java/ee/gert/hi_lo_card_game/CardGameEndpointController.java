@@ -2,6 +2,9 @@ package ee.gert.hi_lo_card_game;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController // annotation @ -> sellega votab controller  api requeste vastu
 
@@ -16,27 +19,58 @@ public class CardGameEndpointController {
     }
 
     //this is the start game that will start all the things.
+    // RESPOSE WILL BE:
+    // the response: ok and the player card...
+    // also should show how many cards are int the stack.
+
+
+    //TODO: add a response Enum
     @GetMapping("/start-round")
-    public String startRound(){
-        if (game.isGameOver){
+    public Card startRound(){
+        Deck test = new Deck();
+        System.out.println(test.getDeckCardCount());
+        System.out.println("got start round request");
+
+        if (game == null || game.isGameOver){
             game = new Game();
+            System.out.println("deck size: " + game.deck.getDeckCardCount());
         }
         game.startNewRound();
 
-        return "";
+        System.out.println("deck size: " + game.deck.getDeckCardCount());
+        return game.round.getPlayerCard();
     }
 
     // this will be the guessing endpoint where I will get the data and check if the request came at the right time
     // possible responses to this request are:
     // CORRECT GUESS  (+1 to score, start new round)
     // TIMED_OUT ()
-    // WRONG_GUESS (-1 HEALTH, new round)
+    // WRONG_GUESS (-1 HEALTH, new round)\
+    //TODO: add request enum
+    //TODO: add a response Enum
     @PostMapping("/check-guess")
-    public String checkGuess(@RequestBody String userGuess){ // this could be an enum of the 3 guesses.
+    public Map<String, Object> checkGuess(@RequestBody String userGuess){ // this could be an enum of the 3 guesses.
+        System.out.println("got check-guess request with guess:");
 
-        return "";
+        userGuess = userGuess.replace("\"", "").trim();
+        System.out.println(userGuess);
+        if (game == null || game.isGameOver) {
+            //error: the game should not be null or over when making a guess.
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "No game happening right now.");
+            return errorResponse; // Spring will automatically convert this to JSON
+        }
+
+        boolean correctGuess = game.round.checkUserGuess(Guess.valueOf(userGuess));
+
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("correct", correctGuess);
+        response.put("Dealer Card: ", game.round.getDealerCard());
+        return response; // Spring will convert this to JSON
     }
-
+//    {"suit":"DIAMONDS","rank":"7","value":7}
+//{"suit":"SPADES","rank":"7","value":7}
     //1. STARTROUND request comes in. In response we will have to:
     //start a 10 second timer
     // BE send FE the card and shows to user.
