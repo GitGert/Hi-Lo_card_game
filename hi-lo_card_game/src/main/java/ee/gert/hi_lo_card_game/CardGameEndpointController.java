@@ -1,5 +1,9 @@
 package ee.gert.hi_lo_card_game;
 
+import ee.gert.hi_lo_card_game.cardGame.Card;
+import ee.gert.hi_lo_card_game.cardGame.Deck;
+import ee.gert.hi_lo_card_game.cardGame.Game;
+import ee.gert.hi_lo_card_game.gameEnums.Guess;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,21 +29,32 @@ public class CardGameEndpointController {
 
 
     //TODO: add a response Enum
+    //TODO: should let the FE know when the game is reset.
     @GetMapping("/start-round")
-    public Card startRound(){
-        Deck test = new Deck();
-        System.out.println(test.getDeckCardCount());
+    public  Map<String, Object> startRound(){
         System.out.println("got start round request");
 
-        if (game == null || game.isGameOver){
+        if (game == null || game.isGameOver()){
             game = new Game();
-            System.out.println("deck size: " + game.deck.getDeckCardCount());
+            System.out.println("deck size: " + game.getDeck().getDeckCardCount());
         }
         game.startNewRound();
 
-        System.out.println("deck size: " + game.deck.getDeckCardCount());
-        return game.round.getPlayerCard();
+        System.out.println("deck size: " + game.getDeck().getDeckCardCount());
+        Card playerCard = game.getRound().getPlayerCard();
+
+        Map<String, Object> response = new HashMap<>();
+
+//        response.put("type", "start_round");
+        response.put("suit", playerCard.getSuit());
+        response.put("rank", playerCard.getRank());
+        response.put("value", playerCard.getValue());
+        response.put("new_health", game.getPlayerHealth());
+        response.put("new_score", game.getScore());
+
+        return response;
     }
+
 
     // this will be the guessing endpoint where I will get the data and check if the request came at the right time
     // possible responses to this request are:
@@ -54,21 +69,59 @@ public class CardGameEndpointController {
 
         userGuess = userGuess.replace("\"", "").trim();
         System.out.println(userGuess);
-        if (game == null || game.isGameOver) {
-            //error: the game should not be null or over when making a guess.
+        if (game == null || game.isGameOver()) {
+            //error: the game should never be null or Game-over when making a guess.
             Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("type", "error");            ///TODO: make a enum of response types
             errorResponse.put("error", "No game happening right now.");
+            errorResponse.put("correct", false);
             return errorResponse; // Spring will automatically convert this to JSON
         }
 
-        boolean correctGuess = game.round.checkUserGuess(Guess.valueOf(userGuess));
 
 
+        boolean correctGuess = game.getRound().checkUserGuess(Guess.valueOf(userGuess));
+        //NOTE: I technically don't need to check isRoundexpired here, since checkGuess returns false if expired. but it makes the code more readable so
+        if (!correctGuess || game.getRound().isRoundExpired()){
+            //remove health from user
+            game.setPlayerHealth(game.getPlayerHealth()-1);
+            if (game.isGameOver()){
+                game = new Game();
+               //send game over response instead.
+                Map<String, Object> gameOverResponse = new HashMap<>();
+                gameOverResponse.put("type", "game_over");
+                gameOverResponse.put("game_over", "You ran out of health");
+                gameOverResponse.put("new_health", "0");
+                return gameOverResponse;
+            }
+
+
+            if (game.getRound().isRoundExpired()){
+                Map<String, Object> roundExpiredResponse = new HashMap<>();
+                roundExpiredResponse.put("type", "error");
+                roundExpiredResponse.put("error", "TIME_OUT");
+                roundExpiredResponse.put("new_health", game.getPlayerHealth());
+                return roundExpiredResponse;
+            }
+
+            //send game over response instead.
+            Map<String, Object> takeDamageResponse = new HashMap<>();
+            takeDamageResponse.put("type", "wrong_guess");
+            takeDamageResponse.put("dealerCard", game.getRound().getDealerCard());
+            takeDamageResponse.put("player_damage", true);
+            takeDamageResponse.put("new_health", game.getPlayerHealth());
+            return takeDamageResponse;
+        }
         Map<String, Object> response = new HashMap<>();
+        game.addToScore();
+        System.out.println("current score: " + game.getScore());
+        response.put("type", "correct_guess");
         response.put("correct", correctGuess);
-        response.put("dealerCard", game.round.getDealerCard());
+        response.put("dealerCard", game.getRound().getDealerCard());
+        response.put("new_score", game.getScore());
         return response; // Spring will convert this to JSON
     }
+
 //    {"suit":"DIAMONDS","rank":"7","value":7}
 //{"suit":"SPADES","rank":"7","value":7}
     //1. STARTROUND request comes in. In response we will have to:

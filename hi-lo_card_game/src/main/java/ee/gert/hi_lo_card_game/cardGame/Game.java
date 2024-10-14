@@ -1,21 +1,52 @@
-package ee.gert.hi_lo_card_game;
+package ee.gert.hi_lo_card_game.cardGame;
+
+import ee.gert.hi_lo_card_game.utils.StopWatch;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
+@Setter
 public class Game {
     Date date;
     int duration;
     int playerHealth;
     Deck deck;
     Round round;
-    boolean isGameOver= false;
+    boolean gameOver;
+    StopWatch stopWatch;
+    double gameDuration;
+    int score;
 
-    Game(){
+    public Game(){
         this.date = new Date();
         this.duration = 0;
         this.playerHealth = 3;
+        gameOver = false;
         takeNewDeckIntoPlay();
+        stopWatch = new StopWatch();
+        stopWatch.start();
+        this.score = 0;
     }
+
+    public void addToScore(){
+        score +=1;
+    }
+
+    public void setPlayerHealth(int playerHealth) {
+        if (playerHealth <= 0){
+            setGameOver(true);
+            stopWatch.stop();
+            gameDuration = stopWatch.getElapsedTime();
+            //also stop the elapsed timer here and set elapsed time;
+        }
+        this.playerHealth = playerHealth;
+    }
+
+//    public boolean isGameOver(){
+//        return playerHealth <=0;
+//    }
 
     public void startNewRound(){
         if (deck.getCards().size() <= 1){
@@ -29,6 +60,7 @@ public class Game {
         deck = new Deck();
         deck.shuffleDeck();
     }
+
 
 
 

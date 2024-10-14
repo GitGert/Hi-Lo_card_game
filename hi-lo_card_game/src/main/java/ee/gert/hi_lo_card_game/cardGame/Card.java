@@ -1,5 +1,6 @@
-package ee.gert.hi_lo_card_game;
+package ee.gert.hi_lo_card_game.cardGame;
 
+import ee.gert.hi_lo_card_game.gameEnums.Suit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

@@ -52,4 +52,9 @@ div {
 
 #player-hand{
   margin-top: 40px;
+  color: lightblue;
+}
+
+#dealer-hand{
+  color: orange;
 }
