@@ -66,7 +66,7 @@ public class CardGameEndpointController {
 
         Map<String, Object> response = new HashMap<>();
         response.put("correct", correctGuess);
-        response.put("Dealer Card: ", game.round.getDealerCard());
+        response.put("dealerCard", game.round.getDealerCard());
         return response; // Spring will convert this to JSON
     }
 //    {"suit":"DIAMONDS","rank":"7","value":7}

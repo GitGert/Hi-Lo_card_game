@@ -18,6 +18,9 @@ public class Game {
     }
 
     public void startNewRound(){
+        if (deck.getCards().size() <= 1){
+            takeNewDeckIntoPlay();
+        }
         //TODO: currently the deal card drawing will also destroy the card which is bad since we will need that "dealer card " to be the next "player card"
         round = new Round(deck, deck.drawTopCard());
     }
