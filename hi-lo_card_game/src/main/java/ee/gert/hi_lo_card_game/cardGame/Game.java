@@ -1,13 +1,21 @@
 package ee.gert.hi_lo_card_game.cardGame;
 
+import ee.gert.hi_lo_card_game.entity.DbGame;
+import ee.gert.hi_lo_card_game.entity.DbUser;
+import ee.gert.hi_lo_card_game.repository.GameRepository;
+import ee.gert.hi_lo_card_game.repository.UserRepository;
 import ee.gert.hi_lo_card_game.utils.StopWatch;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@Service
 public class Game {
     Date date;
     int duration;
@@ -16,8 +24,9 @@ public class Game {
     Round round;
     boolean gameOver;
     StopWatch stopWatch;
-    double gameDuration;
-    int score;
+    Long gameDuration;
+    Long score;
+    String username;
 
     public Game(){
         this.date = new Date();
@@ -27,19 +36,50 @@ public class Game {
         takeNewDeckIntoPlay();
         stopWatch = new StopWatch();
         stopWatch.start();
-        this.score = 0;
+        this.score = 0L;
+
+        //make a new Db user here with the username given from FE
+        // first check if the user already exists so I wouldn't run into user already exists.
     }
 
     public void addToScore(){
         score +=1;
     }
 
+//    @Autowired
+//    GameRepository gameRepository;
+//
+//    @Autowired
+//    UserRepository userRepository;
+
+
     public void setPlayerHealth(int playerHealth) {
         if (playerHealth <= 0){
             setGameOver(true);
             stopWatch.stop();
-            gameDuration = stopWatch.getElapsedTime();
-            //also stop the elapsed timer here and set elapsed time;
+            setGameDuration(Math.round(stopWatch.getElapsedTime()));
+            // make new user if not exist.
+//            DbUser dbUser = new DbUser();
+//            dbUser.setName(this.username);
+//            userRepository.save(dbUser);
+//
+//            DbUser dbUserWithId = userRepository.findByName(this.username);
+//
+//
+//            DbGame dbGame = new DbGame();
+//            dbGame.setGameDurationInSeconds(gameDuration);
+//            dbGame.setUser(dbUserWithId);
+//            dbGame.setCorrectGuessCount(this.score);
+//
+//            gameRepository.save(dbGame);
+
+            // make new game entry connected to the current user.
+            // save both.
+
+            // make a new dbGame entry here and save it. (user will be connected before already.)
+            //add the db stuff here.
+            // create a new game here with
+
         }
         this.playerHealth = playerHealth;
     }
@@ -61,10 +101,6 @@ public class Game {
         deck.shuffleDeck();
     }
 
-
-
-
-    //this got a bit crazy right now. because round and Game is not the same thing.
 
 
     //INSIDE OF GAME:
