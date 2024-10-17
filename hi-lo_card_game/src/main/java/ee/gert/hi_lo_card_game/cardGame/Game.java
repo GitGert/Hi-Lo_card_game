@@ -28,6 +28,10 @@ public class Game {
     Long score;
     String username;
 
+    public void setUsername(String username){
+        this.username = username.toLowerCase();
+    }
+
     public Game(){
         this.date = new Date();
         this.duration = 0;

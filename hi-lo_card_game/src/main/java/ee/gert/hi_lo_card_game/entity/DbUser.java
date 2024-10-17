@@ -22,11 +22,15 @@ public class DbUser {
     @Column(unique = true)
     private String name;
 
-//    @OneToMany
-//    private List<DbGame> game;
-@OneToMany(mappedBy = "dbUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Add mappedBy and cascade
-private List<DbGame> games = new ArrayList<>(); // Initialize the list
+    @OneToMany(cascade = CascadeType.ALL) //(cascade = CascadeType.ALL)
+    @JoinColumn(name = "db_user_id", referencedColumnName = "id")
+    private List<DbGame> games = new ArrayList<>();
+//@OneToMany(mappedBy = "dbUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Add mappedBy and cascade
+//private List<DbGame> games = new ArrayList<>(); // Initialize the list
 
+    public void addGame(DbGame game) {
+        this.games.add(game);
+    }
 }
 
 

@@ -113,7 +113,7 @@ function App() {
   const getUserGames = async (username) => {
     try {
 
-      const response = await fetch("http://localhost:8080/games/"+username + "/" + "sort"); //TODO: change the sort to actual sorting type.
+      const response = await fetch("http://localhost:8080/games/"+username + "/" + "correct_guess"); //TODO: change the sort to actual sorting type.
 
 
       if (!response.ok) {

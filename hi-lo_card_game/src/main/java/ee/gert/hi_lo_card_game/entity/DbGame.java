@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,13 +21,16 @@ public class DbGame {
     Long correctGuessCount;
     Long gameDurationInSeconds;
 
-    //TODO: for some reason I need to to the joind column with user_id instead of db_user_id... this is weird since that is the actual name of the table ???
+    //TODO: for some reason I need to to the join column with user_id instead of db_user_id... this is weird since that is the actual name of the table ???
     //TODO: figure out why
-//    @ManyToOne
+
+    //TODO: figure out why there is a db_user_id field in game that is always empty.
+    //db_user_id
+//    @ManyToOne()
 //    private DbUser dbUser;
-@ManyToOne
-@JoinColumn(name = "user_id") // Specify the foreign key column
-private DbUser dbUser;
+//@ManyToOne
+//@JoinColumn(name = "user_id") // Specify the foreign key column
+//    private DbUser dbUser;
 }
 //GAME SHOULD HAVE:
 

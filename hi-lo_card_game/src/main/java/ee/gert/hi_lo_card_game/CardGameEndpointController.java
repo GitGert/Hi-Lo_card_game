@@ -123,14 +123,18 @@ public class CardGameEndpointController {
 
                 DbGame dbGame = new DbGame();
                 dbGame.setGameDurationInSeconds(game.getGameDuration());
-                dbGame.setDbUser(dbUserWithId);
+//                dbGame.setDbUser(dbUserWithId);
                 dbGame.setCorrectGuessCount(game.getScore());
-
                 gameRepository.save(dbGame);
+//                dbUserWithId.getGame().add(dbGame);
+                dbUserWithId.addGame(dbGame);
+//                dbUserWithId.
+
+                userRepository.save(dbUserWithId);
 
 
-                //TODO: this might break
-                game = new Game();
+//                //TODO: this might break
+//                game = new Game();
 
                 return gameOverResponse;
             }
@@ -167,8 +171,8 @@ public class CardGameEndpointController {
         // Get all user-s games sorted by:
         // play time
         // score
-        DbUser dbUser = userRepository.findByName(username);
-
+        DbUser dbUser = userRepository.findByName(username.toLowerCase());
+        System.out.println("reading rdbuser.Getgames");
         for (DbGame game : dbUser.getGames()){
             System.out.println("id");
             System.out.println(game.getId());
@@ -179,7 +183,29 @@ public class CardGameEndpointController {
 
         }
 
-        return dbUser.getGames();
+        List<DbGame> response ;
+
+        if (sort.equals("correct_guess")){
+            response = gameRepository.findByDbUserOrderByGameDurationInSecondsDesc(dbUser);
+        }else{
+            //default will be by correct guess count
+            //FIXME: the find games by user is not working because they are not connected the right way
+            response = gameRepository.findByDbUserOrderByCorrectGuessCountDesc(dbUser);
+        }
+        System.out.println("reading response list:");
+        for (DbGame game : response){
+            System.out.println("id");
+            System.out.println(game.getId());
+            System.out.println("duration");
+            System.out.println(game.getGameDurationInSeconds());
+            System.out.println("count");
+            System.out.println(game.getCorrectGuessCount());
+
+        }
+        System.out.println(response.toArray().length);
+
+
+        return gameRepository.findByDbUserOrderByCorrectGuessCountDesc(dbUser);
 
 
 //        Map<String, Object> response = new HashMap<>();
