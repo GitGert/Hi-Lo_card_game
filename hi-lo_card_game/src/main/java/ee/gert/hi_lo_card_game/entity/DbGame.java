@@ -1,6 +1,9 @@
 package ee.gert.hi_lo_card_game.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,6 +23,11 @@ public class DbGame {
     Long id;
     Long correctGuessCount;
     Long gameDurationInSeconds;
+
+    @ManyToOne()
+    @JsonBackReference
+    private DbUser dbUser;
+
 
     //TODO: for some reason I need to to the join column with user_id instead of db_user_id... this is weird since that is the actual name of the table ???
     //TODO: figure out why

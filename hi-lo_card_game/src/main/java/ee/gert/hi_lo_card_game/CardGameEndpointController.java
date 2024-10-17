@@ -123,11 +123,11 @@ public class CardGameEndpointController {
 
                 DbGame dbGame = new DbGame();
                 dbGame.setGameDurationInSeconds(game.getGameDuration());
-//                dbGame.setDbUser(dbUserWithId);
+                dbGame.setDbUser(dbUserWithId);
                 dbGame.setCorrectGuessCount(game.getScore());
                 gameRepository.save(dbGame);
 //                dbUserWithId.getGame().add(dbGame);
-                dbUserWithId.addGame(dbGame);
+//                dbUserWithId.addGame(dbGame);
 //                dbUserWithId.
 
                 userRepository.save(dbUserWithId);
@@ -168,10 +168,9 @@ public class CardGameEndpointController {
 
     @GetMapping("/games/{username}/{sort}")
     public List<DbGame> startRound(@PathVariable("username") String username, @PathVariable("sort") String sort) {
-        // Get all user-s games sorted by:
-        // play time
-        // score
+
         DbUser dbUser = userRepository.findByName(username.toLowerCase());
+
         System.out.println("reading rdbuser.Getgames");
         for (DbGame game : dbUser.getGames()){
             System.out.println("id");
@@ -186,11 +185,17 @@ public class CardGameEndpointController {
         List<DbGame> response ;
 
         if (sort.equals("correct_guess")){
-            response = gameRepository.findByDbUserOrderByGameDurationInSecondsDesc(dbUser);
+
+            response = gameRepository.findByDbUserOrderByCorrectGuessCountDesc(dbUser);
         }else{
             //default will be by correct guess count
             //FIXME: the find games by user is not working because they are not connected the right way
-            response = gameRepository.findByDbUserOrderByCorrectGuessCountDesc(dbUser);
+//            response = gameRepository.findByDbUserOrderByCorrectGuessCountDesc(dbUser);
+            response = gameRepository.findByDbUserOrderByGameDurationInSecondsDesc(dbUser);
+//            DbUser user =  userRepository.findByNameOrderByGames_CorrectGuessCountAsc(username.toLowerCase());
+//            gameRepository.find
+
+
         }
         System.out.println("reading response list:");
         for (DbGame game : response){
@@ -205,17 +210,9 @@ public class CardGameEndpointController {
         System.out.println(response.toArray().length);
 
 
-        return gameRepository.findByDbUserOrderByCorrectGuessCountDesc(dbUser);
 
+        return response;
 
-//        Map<String, Object> response = new HashMap<>();
-//        game.addToScore();
-//        System.out.println("current score: " + game.getScore());
-//        response.put("type", "correct_guess");
-//        response.put("correct", correctGuess);
-//        response.put("dealerCard", game.getRound().getDealerCard());
-//        response.put("new_score", game.getScore());
-//        return response;
     }
 
 }

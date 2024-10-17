@@ -12,4 +12,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<DbUser, Long> {
 
     DbUser findByName(String name);
+
+    List<DbGame> findByGames_DbUserOrderByGames_CorrectGuessCountAsc(DbUser dbUser);
+
+    List<DbUser> findByNameOrderByGames_CorrectGuessCountAsc(String name);
 }

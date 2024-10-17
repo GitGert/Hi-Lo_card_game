@@ -14,7 +14,8 @@ function App() {
   const [timerMinutes, setTimerMinutes] = useState(0)//TODO: implement timer to show to user
   const [score, setScore] = useState(0)
   const [username, setUsername] = useState("")
-  // const 
+  const [selectedItem, setSelectedItem] = useState("");
+  const [userGames, setUserGames] = useState(null)
 
   const startRoundApiRequest = async (username ) => {
     setCanGuess(true);
@@ -113,7 +114,7 @@ function App() {
   const getUserGames = async (username) => {
     try {
 
-      const response = await fetch("http://localhost:8080/games/"+username + "/" + "correct_guess"); //TODO: change the sort to actual sorting type.
+      const response = await fetch("http://localhost:8080/games/"+username + "/" + selectedItem); //TODO: change the sort to actual sorting type.
 
 
       if (!response.ok) {
@@ -121,24 +122,13 @@ function App() {
       }
       const result = await response.json();
       console.log(result)
-
+        setUserGames(result)
     } catch (err) {
       console.log(err.message);
     }
   }
 
-  function usernameExistsInCookie(){
-      // Retrieve all cookies as a single string
-  const cookies = document.cookie;
 
-  // Check if a specific cookie (e.g., 'username') exists in the cookies string
-  const usernameCookie = cookies
-    .split('; ')
-    .find(row => row.startsWith('username='));
-
-  // If the 'username' cookie exists, return true; otherwise, return false
-  return !!usernameCookie;
-  }
 
   function button(buttonName, func, argument = "") {
     return (
@@ -219,11 +209,46 @@ function App() {
       </>
       )}
 
-      {button("get user games to console", getUserGames, username)}
 
       {playerHand && (
         <div id="player-hand">{"YOUR HAND: " + JSON.stringify(playerHand)}</div>
       )}
+
+
+{username &&    <form 
+    style={{margin : "300px"}}
+onSubmit={(e)=> {
+
+      e.preventDefault(); // Prevents default form submission behavior
+      // e.target.elements.username?.valu
+      getUserGames(username)}}>
+      <div>
+        <label htmlFor="dropdown"></label>
+        <select
+          id="dropdown"
+          value={selectedItem}
+          onChange={(e) => setSelectedItem(e.target.value)}
+          required
+        >
+          <option value="">sort by:</option>
+          <option value="correct_guess">correct_guess</option>
+          <option value="game_duration">game_duration</option>
+        </select>
+      </div>
+
+
+      <button type="submit">getUserGames</button>
+
+      {userGames && (
+        <div>
+          <h3>API Response:</h3>
+          <pre>{JSON.stringify(userGames, null, 2)}</pre>
+        </div>
+      )}
+
+    </form>}
+      {/* {button("get user games to console", getUserGames, username)} */}
+
     </div>
   );
 }

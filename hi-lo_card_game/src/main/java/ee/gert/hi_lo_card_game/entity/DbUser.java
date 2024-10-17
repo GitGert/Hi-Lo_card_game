@@ -1,6 +1,7 @@
 package ee.gert.hi_lo_card_game.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,15 +23,22 @@ public class DbUser {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL) //(cascade = CascadeType.ALL)
-    @JoinColumn(name = "db_user_id", referencedColumnName = "id")
-    private List<DbGame> games = new ArrayList<>();
+    @OneToMany()
+    @JoinColumn(name="db_user_id")
+    @JsonManagedReference
+    private List<DbGame> games;
+//    private
+
+
+//    @OneToMany(cascade = CascadeType.ALL) //(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "db_user_id", referencedColumnName = "id")
+//    private List<DbGame> games = new ArrayList<>();
 //@OneToMany(mappedBy = "dbUser", cascade = CascadeType.ALL, fetch = FetchType.LAZY) // Add mappedBy and cascade
 //private List<DbGame> games = new ArrayList<>(); // Initialize the list
 
-    public void addGame(DbGame game) {
-        this.games.add(game);
-    }
+//    public void addGame(DbGame game) {
+//        this.games.add(game);
+//    }
 }
 
 
