@@ -1,7 +1,7 @@
-package ee.gert.hi_lo_card_game.cardGame;
+package ee.gert.hi_lo_card_game.service.cardGame;
 
 
-import ee.gert.hi_lo_card_game.gameEnums.Guess;
+import ee.gert.hi_lo_card_game.service.cardGame.gameEnums.Guess;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,6 @@ public class Round {
     Card playerCard;
     Card dealerCard;
     boolean roundExpired;
-
 
     public Round(Deck deck, Card playerCard){
         this.deck = deck;
@@ -40,7 +39,6 @@ public class Round {
         }else{
             return  Guess.HIGHER;
         }
-
     }
 
     public static void setTimeout(Runnable runnable, int delay){
@@ -54,10 +52,4 @@ public class Round {
             }
         }).start();
     }
-
-    //INSIDE OF ROUND:
-    // 10 seocods elapsed, deck, playercard,
-
-
-
 }

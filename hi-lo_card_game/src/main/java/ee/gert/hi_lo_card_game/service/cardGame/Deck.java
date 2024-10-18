@@ -1,6 +1,6 @@
-package ee.gert.hi_lo_card_game.cardGame;
+package ee.gert.hi_lo_card_game.service.cardGame;
 
-import ee.gert.hi_lo_card_game.gameEnums.Suit;
+import ee.gert.hi_lo_card_game.service.cardGame.gameEnums.Suit;
 import lombok.Getter;
 import lombok.Setter;
 
